@@ -7,6 +7,7 @@ const state = {
   telemetry: [],
   eventSource: null,
   pollTimer: null,
+  renderQueued: false,
   error: null,
   mfaSetup: null,
   mfaPending: false
@@ -223,29 +224,32 @@ async function loadDashboard() {
 
 function connectEvents() {
   if (state.eventSource) state.eventSource.close();
-  startPolling();
   state.eventSource = new EventSource("/api/events", { withCredentials: true });
+
+  state.eventSource.addEventListener("open", () => {
+    stopPolling();
+  });
 
   state.eventSource.addEventListener("telemetry", (event) => {
     state.telemetry.push(JSON.parse(event.data));
     state.telemetry = state.telemetry.slice(-120);
     state.dashboard.summary = buildClientSummary();
-    renderLiveParts();
+    scheduleLiveRender();
   });
 
   state.eventSource.addEventListener("summary", (event) => {
     state.dashboard.summary = JSON.parse(event.data);
-    renderLiveParts();
+    scheduleLiveRender();
   });
 
   state.eventSource.addEventListener("mqtt", (event) => {
     state.dashboard.mqtt = JSON.parse(event.data);
-    renderLiveParts();
+    scheduleLiveRender();
   });
 
   state.eventSource.addEventListener("thresholds", (event) => {
     state.dashboard.thresholds = JSON.parse(event.data);
-    renderLiveParts();
+    scheduleLiveRender();
   });
 
   state.eventSource.addEventListener("error", () => {
@@ -259,11 +263,26 @@ function startPolling() {
     if (!state.user) return;
     try {
       await loadDashboard();
-      renderLiveParts();
+      scheduleLiveRender();
     } catch {
       // Keep the last visible state; the next poll may recover.
     }
-  }, 4000);
+  }, 10000);
+}
+
+function stopPolling() {
+  if (!state.pollTimer) return;
+  clearInterval(state.pollTimer);
+  state.pollTimer = null;
+}
+
+function scheduleLiveRender() {
+  if (state.renderQueued) return;
+  state.renderQueued = true;
+  requestAnimationFrame(() => {
+    state.renderQueued = false;
+    renderLiveParts();
+  });
 }
 
 function renderDashboard() {
@@ -533,8 +552,7 @@ function drawChart() {
 async function logout() {
   await api("/api/logout", { method: "POST", body: "{}" });
   if (state.eventSource) state.eventSource.close();
-  if (state.pollTimer) clearInterval(state.pollTimer);
-  state.pollTimer = null;
+  stopPolling();
   state.user = null;
   state.dashboard = null;
   renderLogin();
