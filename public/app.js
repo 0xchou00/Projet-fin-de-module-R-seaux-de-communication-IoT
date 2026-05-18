@@ -6,6 +6,7 @@ const state = {
   dashboard: null,
   telemetry: [],
   eventSource: null,
+  pollTimer: null,
   error: null,
   mfaSetup: null,
   mfaPending: false
@@ -218,6 +219,7 @@ async function loadDashboard() {
 
 function connectEvents() {
   if (state.eventSource) state.eventSource.close();
+  startPolling();
   state.eventSource = new EventSource("/api/events", { withCredentials: true });
 
   state.eventSource.addEventListener("telemetry", (event) => {
@@ -241,6 +243,23 @@ function connectEvents() {
     state.dashboard.thresholds = JSON.parse(event.data);
     renderLiveParts();
   });
+
+  state.eventSource.addEventListener("error", () => {
+    startPolling();
+  });
+}
+
+function startPolling() {
+  if (state.pollTimer) return;
+  state.pollTimer = setInterval(async () => {
+    if (!state.user) return;
+    try {
+      await loadDashboard();
+      renderLiveParts();
+    } catch {
+      // Keep the last visible state; the next poll may recover.
+    }
+  }, 4000);
 }
 
 function renderDashboard() {
@@ -510,6 +529,8 @@ function drawChart() {
 async function logout() {
   await api("/api/logout", { method: "POST", body: "{}" });
   if (state.eventSource) state.eventSource.close();
+  if (state.pollTimer) clearInterval(state.pollTimer);
+  state.pollTimer = null;
   state.user = null;
   state.dashboard = null;
   renderLogin();
