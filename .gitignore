@@ -2,5 +2,6 @@ data/
 *.log
 node_modules/
 tools/
+docs/rendered_pdf_check/
 .env
 .env.local

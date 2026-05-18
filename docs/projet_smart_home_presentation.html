@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <title>Projet Smart Home DHT22 - Architecture et Presentation</title>
+    <style>
+      @page {
+        size: A4;
+        margin: 0;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: #eef3f8;
+        color: #10203a;
+        font-family: Arial, Helvetica, sans-serif;
+        line-height: 1.45;
+      }
+
+      .page {
+        width: 210mm;
+        height: 297mm;
+        page-break-after: always;
+        background: #ffffff;
+        padding: 17mm;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .page:last-child {
+        page-break-after: auto;
+      }
+
+      .cover {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background: linear-gradient(130deg, #f7fbff 0%, #e9f2ff 48%, #eefcf5 100%);
+      }
+
+      .kicker {
+        color: #077b9c;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 18px 0 12px;
+        font-size: 40px;
+        line-height: 1.05;
+      }
+
+      h2 {
+        margin: 0 0 14px;
+        font-size: 25px;
+        color: #132642;
+      }
+
+      h3 {
+        margin: 0 0 8px;
+        font-size: 17px;
+      }
+
+      p {
+        margin: 0 0 10px;
+        color: #4f6078;
+        font-size: 14px;
+      }
+
+      .lead {
+        font-size: 17px;
+        max-width: 680px;
+      }
+
+      .meta-grid,
+      .cards,
+      .two-col {
+        display: grid;
+        gap: 12px;
+      }
+
+      .meta-grid {
+        grid-template-columns: repeat(3, 1fr);
+        margin-top: 30px;
+      }
+
+      .two-col {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .card,
+      .metric,
+      .callout {
+        border: 1px solid #d8e2ee;
+        border-radius: 8px;
+        background: #ffffff;
+        padding: 13px;
+      }
+
+      .metric strong {
+        display: block;
+        font-size: 18px;
+        color: #10203a;
+      }
+
+      .metric span {
+        color: #5c6f86;
+        font-size: 12px;
+      }
+
+      .callout {
+        border-color: #b9d2f4;
+        background: #eef6ff;
+      }
+
+      .success {
+        border-color: #b7dfc2;
+        background: #effaf2;
+      }
+
+      .warning {
+        border-color: #f0cf9f;
+        background: #fff7ec;
+      }
+
+      .diagram {
+        width: 100%;
+        border: 1px solid #d8e2ee;
+        border-radius: 8px;
+        background: #f8fbff;
+        padding: 8px;
+      }
+
+      .diagram img {
+        width: 100%;
+        display: block;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        font-size: 12px;
+      }
+
+      th {
+        background: #132642;
+        color: #ffffff;
+        text-align: left;
+        padding: 9px;
+      }
+
+      td {
+        border: 1px solid #d8e2ee;
+        padding: 9px;
+        vertical-align: top;
+      }
+
+      code {
+        font-family: Consolas, "Courier New", monospace;
+        color: #1d4ed8;
+        font-size: 12px;
+      }
+
+      pre {
+        margin: 0;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        font-family: Consolas, "Courier New", monospace;
+        color: #1d4ed8;
+        font-size: 11px;
+        line-height: 1.55;
+      }
+
+      ul,
+      ol {
+        margin: 8px 0 0 18px;
+        padding: 0;
+        color: #4f6078;
+        font-size: 13px;
+      }
+
+      li {
+        margin-bottom: 6px;
+      }
+
+      .footer {
+        position: absolute;
+        left: 17mm;
+        right: 17mm;
+        bottom: 12mm;
+        display: flex;
+        justify-content: space-between;
+        color: #7b8798;
+        font-size: 10px;
+        border-top: 1px solid #d8e2ee;
+        padding-top: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="page cover">
+      <div>
+        <div class="kicker">Mini projet IoT - Maison intelligente</div>
+        <h1>Smart Home avec controle de la temperature et de l'humidite</h1>
+        <p class="lead">Application securisee de visualisation temps reel des donnees DHT22 envoyees par ESP32/Wokwi vers EMQX Cloud avec MQTT chiffre par TLS.</p>
+        <div class="meta-grid">
+          <div class="metric"><strong>Domaine</strong><span>Smart Home / IoT</span></div>
+          <div class="metric"><strong>Technologies</strong><span>Wokwi, ESP32, DHT22, EMQX, Node.js</span></div>
+          <div class="metric"><strong>Securite</strong><span>MQTT/TLS + MFA TOTP</span></div>
+        </div>
+      </div>
+      <div class="callout success">
+        <h3>Objectif du livrable</h3>
+        <p>Montrer au jury une chaine complete: acquisition capteur, publication MQTT/TLS, reception cloud, backend applicatif securise et dashboard accessible depuis PC ou telephone.</p>
+      </div>
+      <div class="footer"><span>Projet Smart Home DHT22</span><span>Architecture et presentation</span></div>
+    </section>
+
+    <section class="page">
+      <h2>1. Architecture generale</h2>
+      <p>Le projet est organise autour de trois blocs: simulation IoT, broker MQTT cloud et application securisee. Chaque bloc a un role clair dans la chaine de donnees.</p>
+      <div class="diagram">
+        <img src="architecture.svg" alt="Architecture Smart Home DHT22">
+      </div>
+      <div class="two-col" style="margin-top: 14px;">
+        <div class="card">
+          <h3>Flux montant</h3>
+          <p>DHT22 mesure la temperature et l'humidite. ESP32 publie un payload JSON sur EMQX Cloud via MQTT/TLS.</p>
+        </div>
+        <div class="card">
+          <h3>Flux dashboard</h3>
+          <p>Le backend Node.js s'abonne au topic, stocke l'historique local et pousse les mises a jour au navigateur.</p>
+        </div>
+      </div>
+      <div class="footer"><span>Architecture</span><span>Page 2</span></div>
+    </section>
+
+    <section class="page">
+      <h2>2. Composants techniques</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Composant</th>
+            <th>Role</th>
+            <th>Preuve / configuration</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Wokwi + ESP32</strong></td>
+            <td>Simulation du microcontroleur et lecture du capteur DHT22.</td>
+            <td>Code Arduino publie toutes les 5 secondes.</td>
+          </tr>
+          <tr>
+            <td><strong>DHT22</strong></td>
+            <td>Mesure temperature et humidite.</td>
+            <td>GPIO 33, seuils: 18-30 C et 30-70%.</td>
+          </tr>
+          <tr>
+            <td><strong>EMQX Cloud</strong></td>
+            <td>Broker MQTT accessible depuis Wokwi et le backend.</td>
+            <td><code>na7a271a.ala.eu-central-1.emqxsl.com:8883</code></td>
+          </tr>
+          <tr>
+            <td><strong>MQTT/TLS</strong></td>
+            <td>Transport chiffre et authentifie pour les messages IoT.</td>
+            <td>Port <code>8883</code>, protocole <code>MQTT_TLS</code>.</td>
+          </tr>
+          <tr>
+            <td><strong>Backend Node.js</strong></td>
+            <td>Connexion au broker, abonnement au topic, API et sessions.</td>
+            <td>Topic <code>smart-home/dht22/telemetry</code>.</td>
+          </tr>
+          <tr>
+            <td><strong>Dashboard Web</strong></td>
+            <td>Visualisation temps reel, historique, alertes et etat MQTT.</td>
+            <td>Accessible localement, en LAN ou via tunnel public.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 style="margin-top: 22px;">3. Format des donnees</h2>
+      <div class="callout">
+        <pre>{
+  "device": "ESP32_DHT22",
+  "temperature": 24.00,
+  "humidity": 40.00,
+  "temperature_status": "NORMAL",
+  "humidity_status": "NORMAL",
+  "protocol": "MQTT_TLS",
+  "port": 8883
+}</pre>
+      </div>
+      <div class="footer"><span>Composants et donnees</span><span>Page 3</span></div>
+    </section>
+
+    <section class="page">
+      <h2>4. Securite et conformite a l'enonce</h2>
+      <div class="cards">
+        <div class="card">
+          <h3>Communication securisee</h3>
+          <p>ESP32/Wokwi envoie les donnees au cloud avec MQTT sur TLS. L'objectif est de garantir la confidentialite du flux capteur.</p>
+        </div>
+        <div class="card">
+          <h3>Authentification forte</h3>
+          <p>Le dashboard impose un mot de passe et un second facteur TOTP avant l'acces aux donnees.</p>
+        </div>
+        <div class="card">
+          <h3>Secrets proteges</h3>
+          <p>Les identifiants EMQX sont utilises par le backend et ne sont pas exposes dans le navigateur.</p>
+        </div>
+        <div class="card">
+          <h3>Protection applicative</h3>
+          <p>Sessions signees HttpOnly, protection CSRF, limitation des tentatives et endpoint de sante sans secrets.</p>
+        </div>
+      </div>
+
+      <h2 style="margin-top: 22px;">5. Validation technique</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Test</th>
+            <th>Resultat attendu</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>/api/health</code></td>
+            <td><code>mqtt.connected = true</code>, broker et port visibles, aucun secret expose.</td>
+          </tr>
+          <tr>
+            <td>Wokwi Serial Monitor</td>
+            <td><code>Connecting to EMQX Cloud using MQTT/TLS... connected</code> puis <code>Telemetry published successfully</code>.</td>
+          </tr>
+          <tr>
+            <td>Dashboard</td>
+            <td>Temperature, humidite, statuts et historique se mettent a jour a la reception MQTT.</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="footer"><span>Securite</span><span>Page 4</span></div>
+    </section>
+
+    <section class="page">
+      <h2>6. Scenario de demonstration devant jury</h2>
+      <ol>
+        <li>Ouvrir EMQX Cloud et montrer le deployment <code>deployment-na7a271a</code>.</li>
+        <li>Montrer l'adresse du broker et le port TLS <code>8883</code>.</li>
+        <li>Lancer la simulation Wokwi avec ESP32 et DHT22.</li>
+        <li>Montrer dans le Serial Monitor la connexion MQTT/TLS et la publication telemetry.</li>
+        <li>Ouvrir le dashboard sur PC ou telephone.</li>
+        <li>Se connecter avec authentification forte: mot de passe + code TOTP.</li>
+        <li>Modifier la temperature ou l'humidite dans Wokwi et montrer la mise a jour du dashboard.</li>
+      </ol>
+
+      <div class="two-col" style="margin-top: 18px;">
+        <div class="callout success">
+          <h3>Liens utiles</h3>
+          <p>Local: <code>http://localhost:3000</code></p>
+          <p>LAN: <code>http://192.168.1.11:3000</code></p>
+          <p>Public temporaire: <code>trycloudflare.com</code></p>
+        </div>
+        <div class="callout warning">
+          <h3>Points a surveiller</h3>
+          <p>Le lien Cloudflare est temporaire. Garder la fenetre PowerShell ouverte pendant la demo.</p>
+          <p>Le dashboard change seulement quand Wokwi publie de nouvelles valeurs.</p>
+        </div>
+      </div>
+
+      <h2 style="margin-top: 22px;">Conclusion</h2>
+      <p>Le projet respecte l'enonce: une maison intelligente supervise temperature et humidite a distance, les donnees passent par un serveur cloud via MQTT/TLS, et l'acces utilisateur se fait par une application securisee avec authentification forte.</p>
+      <div class="footer"><span>Demo et conclusion</span><span>Page 5</span></div>
+    </section>
+  </body>
+</html>
