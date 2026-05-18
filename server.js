@@ -240,7 +240,7 @@ function serveStatic(req, res, url) {
 
 function buildSummary() {
   const last = telemetry.at(-1) || null;
-  const alerts = telemetry.slice(-50).filter((item) => item.high_temperature || item.high_humidity).length;
+  const alerts = telemetry.slice(-50).filter(isAlertTelemetry).length;
   const normal = telemetry.slice(-50).filter((item) => {
     return item.temperature_status === "NORMAL" && item.humidity_status === "NORMAL";
   }).length;
@@ -252,6 +252,15 @@ function buildSummary() {
     recentNormal: normal,
     lastReceivedAt: last ? last.receivedAt : null
   };
+}
+
+function isAlertTelemetry(item) {
+  return Boolean(
+    item.high_temperature ||
+    item.high_humidity ||
+    (item.temperature_status && item.temperature_status !== "NORMAL") ||
+    (item.humidity_status && item.humidity_status !== "NORMAL")
+  );
 }
 
 function sanitizeThresholds(body) {

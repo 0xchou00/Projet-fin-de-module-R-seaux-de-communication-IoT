@@ -564,10 +564,19 @@ function buildClientSummary() {
   return {
     last,
     totalMessages: Math.max(state.dashboard.summary.totalMessages || 0, state.telemetry.length),
-    recentAlerts: recent.filter((item) => item.high_temperature || item.high_humidity).length,
+    recentAlerts: recent.filter(isAlertTelemetry).length,
     recentNormal: recent.filter((item) => item.temperature_status === "NORMAL" && item.humidity_status === "NORMAL").length,
     lastReceivedAt: last ? last.receivedAt : null
   };
+}
+
+function isAlertTelemetry(item) {
+  return Boolean(
+    item.high_temperature ||
+    item.high_humidity ||
+    (item.temperature_status && item.temperature_status !== "NORMAL") ||
+    (item.humidity_status && item.humidity_status !== "NORMAL")
+  );
 }
 
 function statusPill(value) {
