@@ -53,7 +53,7 @@ if (-not $appReady) {
   Write-Host "Demarrage de l'application locale..." -ForegroundColor Cyan
   Start-Process `
     -FilePath $nodeExe `
-    -ArgumentList "$projectDir\server.js" `
+    -ArgumentList "`"$projectDir\server.js`"" `
     -WorkingDirectory $projectDir `
     -RedirectStandardOutput $appLog `
     -RedirectStandardError $appErr `
