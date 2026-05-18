@@ -1,0 +1,22 @@
+{
+  "name": "smart-home-dht22-secure-dashboard",
+  "version": "1.0.0",
+  "description": "Application securisee avec authentification forte pour visualiser les donnees DHT22 envoyees par ESP32/Wokwi vers EMQX MQTT/TLS.",
+  "main": "server.js",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "iot",
+    "mqtt",
+    "tls",
+    "esp32",
+    "dht22",
+    "mfa"
+  ],
+  "author": "",
+  "license": "MIT"
+}

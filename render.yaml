@@ -1,0 +1,34 @@
+services:
+  - type: web
+    name: smart-home-dht22-dashboard
+    runtime: node
+    plan: free
+    buildCommand: "echo No build step required"
+    startCommand: "npm start"
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: APP_HOST
+        value: 0.0.0.0
+      - key: APP_SESSION_SECRET
+        sync: false
+      - key: APP_ADMIN_USERNAME
+        value: admin
+      - key: APP_ADMIN_PASSWORD
+        sync: false
+      - key: MQTT_HOST
+        value: na7a271a.ala.eu-central-1.emqxsl.com
+      - key: MQTT_PORT
+        value: 8883
+      - key: MQTT_USERNAME
+        value: dht22
+      - key: MQTT_PASSWORD
+        sync: false
+      - key: MQTT_TELEMETRY_TOPIC
+        value: smart-home/dht22/telemetry
+      - key: MQTT_STATUS_TOPIC
+        value: smart-home/dht22/status
+      - key: MQTT_CONTROL_TOPIC
+        value: smart-home/dht22/control
+      - key: MQTT_REJECT_UNAUTHORIZED
+        value: true
