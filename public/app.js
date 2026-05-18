@@ -39,7 +39,7 @@ async function getCsrf() {
   state.csrfToken = data.csrfToken;
 }
 
-async function api(url, options = {}) {
+async function api(url, options = {}, retryOnCsrf = true) {
   const response = await fetch(url, {
     credentials: "same-origin",
     headers: {
@@ -50,6 +50,10 @@ async function api(url, options = {}) {
     ...options
   });
   const data = await response.json().catch(() => ({}));
+  if (!response.ok && retryOnCsrf && data.error === "CSRF token invalide") {
+    await getCsrf();
+    return api(url, options, false);
+  }
   if (!response.ok) throw new Error(data.error || "Requete impossible");
   return data;
 }
