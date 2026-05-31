@@ -22,12 +22,13 @@ const config = {
   host: env("APP_HOST", "0.0.0.0"),
   sessionSecret: env("APP_SESSION_SECRET", crypto.randomBytes(32).toString("hex")),
   adminUsername: env("APP_ADMIN_USERNAME", "admin"),
-  adminPassword: env("APP_ADMIN_PASSWORD", "Admin@12345!"),
+  adminPassword: env("APP_ADMIN_PASSWORD", "ChangeMe@12345!"),
+  cookieSecure: env("APP_COOKIE_SECURE", "auto"),
   mqtt: {
     host: env("MQTT_HOST", "na7a271a.ala.eu-central-1.emqxsl.com"),
     port: numberEnv("MQTT_PORT", 8883),
     username: env("MQTT_USERNAME", "dht22"),
-    password: env("MQTT_PASSWORD", "dht22test"),
+    password: env("MQTT_PASSWORD", ""),
     telemetryTopic: env("MQTT_TELEMETRY_TOPIC", "smart-home/dht22/telemetry"),
     statusTopic: env("MQTT_STATUS_TOPIC", "smart-home/dht22/status"),
     controlTopic: env("MQTT_CONTROL_TOPIC", "smart-home/dht22/control"),
@@ -321,18 +322,25 @@ function getSession(req, res) {
     sessions.set(session.id, session);
   }
 
-  setSessionCookie(res, session.id);
+  setSessionCookie(req, res, session.id);
   return session;
 }
 
-function setSessionCookie(res, id) {
+function setSessionCookie(req, res, id) {
   const signed = signValue(id);
   const maxAge = 60 * 60 * 8;
-  res.setHeader("Set-Cookie", `sid=${signed}; Path=/; HttpOnly; SameSite=Strict; Max-Age=${maxAge}`);
+  const secure = shouldUseSecureCookie(req) ? "; Secure" : "";
+  res.setHeader("Set-Cookie", `sid=${signed}; Path=/; HttpOnly; SameSite=Strict; Max-Age=${maxAge}${secure}`);
 }
 
 function clearCookie(res) {
   res.setHeader("Set-Cookie", "sid=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0");
+}
+
+function shouldUseSecureCookie(req) {
+  if (config.cookieSecure === "true") return true;
+  if (config.cookieSecure === "false") return false;
+  return Boolean(req.socket.encrypted || req.headers["x-forwarded-proto"] === "https");
 }
 
 function signValue(value) {

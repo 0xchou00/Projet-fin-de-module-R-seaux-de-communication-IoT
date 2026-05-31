@@ -1,7 +1,18 @@
 data/
 *.log
+*.err.log
 node_modules/
 tools/
 docs/rendered_pdf_check/
 .env
 .env.local
+.DS_Store
+Thumbs.db
+coverage/
+dist/
+build/
+
+# Generated material that is not part of the IoT dashboard deliverable.
+build_soc_report.py
+ppt_extract/
+report/

@@ -36,7 +36,7 @@ Cette URL doit etre ouverte sur le telephone ou le PC du jury, connecte au meme 
 
 ```text
 Utilisateur: admin
-Mot de passe: Admin@12345!
+Mot de passe: valeur configuree dans APP_ADMIN_PASSWORD
 ```
 
 8. Activer le MFA avec une application Authenticator si c'est la premiere connexion.

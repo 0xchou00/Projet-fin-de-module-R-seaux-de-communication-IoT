@@ -16,6 +16,8 @@ services:
         value: admin
       - key: APP_ADMIN_PASSWORD
         sync: false
+      - key: APP_COOKIE_SECURE
+        value: true
       - key: MQTT_HOST
         value: na7a271a.ala.eu-central-1.emqxsl.com
       - key: MQTT_PORT

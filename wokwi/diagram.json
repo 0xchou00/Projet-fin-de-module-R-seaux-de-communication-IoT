@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "author": "Smart Home DHT22",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "board-esp32-devkit-c-v4",
+      "id": "esp",
+      "top": 0,
+      "left": 210,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-dht22",
+      "id": "dht1",
+      "top": 55,
+      "left": 35,
+      "attrs": {
+        "temperature": "24",
+        "humidity": "45"
+      }
+    }
+  ],
+  "connections": [
+    ["esp:3V3", "dht1:VCC", "red", ["v120", "h-145"]],
+    ["esp:GND.1", "dht1:GND", "black", ["v-95", "h-170"]],
+    ["esp:33", "dht1:SDA", "blue", ["v90", "h-125"]]
+  ],
+  "dependencies": {}
+}

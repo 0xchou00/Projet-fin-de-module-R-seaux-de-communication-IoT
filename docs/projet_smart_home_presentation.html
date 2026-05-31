@@ -215,7 +215,7 @@
         <h1>Smart Home avec controle de la temperature et de l'humidite</h1>
         <p class="lead">Application securisee de visualisation temps reel des donnees DHT22 envoyees par ESP32/Wokwi vers EMQX Cloud avec MQTT chiffre par TLS.</p>
         <div class="meta-grid">
-          <div class="metric"><strong>Domaine</strong><span>Smart Home / IoT</span></div>
+        <div class="metric"><strong>Domaine</strong><span>Smart Home / IoT</span></div>
           <div class="metric"><strong>Technologies</strong><span>Wokwi, ESP32, DHT22, EMQX, Node.js</span></div>
           <div class="metric"><strong>Securite</strong><span>MQTT/TLS + MFA TOTP</span></div>
         </div>
@@ -232,6 +232,9 @@
       <p>Le projet est organise autour de trois blocs: simulation IoT, broker MQTT cloud et application securisee. Chaque bloc a un role clair dans la chaine de donnees.</p>
       <div class="diagram">
         <img src="architecture.svg" alt="Architecture Smart Home DHT22">
+      </div>
+      <div class="diagram" style="margin-top: 12px;">
+        <img src="esp32_dht22_wiring.svg" alt="Cablage ESP32 DHT22 dans Wokwi">
       </div>
       <div class="two-col" style="margin-top: 14px;">
         <div class="card">
@@ -260,7 +263,7 @@
           <tr>
             <td><strong>Wokwi + ESP32</strong></td>
             <td>Simulation du microcontroleur et lecture du capteur DHT22.</td>
-            <td>Code Arduino publie toutes les 5 secondes.</td>
+            <td>Dossier <code>wokwi/</code>: sketch, diagramme et bibliotheques.</td>
           </tr>
           <tr>
             <td><strong>DHT22</strong></td>
@@ -369,6 +372,7 @@
           <h3>Liens utiles</h3>
           <p>Local: <code>http://localhost:3000</code></p>
           <p>LAN: <code>http://192.168.1.11:3000</code></p>
+          <p>Wokwi: <code>https://wokwi.com/projects/REMPLACER_PAR_LE_LIEN_PUBLIC</code></p>
           <p>Public temporaire: <code>trycloudflare.com</code></p>
         </div>
         <div class="callout warning">

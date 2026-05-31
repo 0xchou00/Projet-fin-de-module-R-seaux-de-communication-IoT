@@ -23,7 +23,7 @@ Limite a connaitre: l'offre gratuite peut mettre le service en veille apres envi
 - `render.yaml`: configuration Render prete a deployer.
 - `.env.example`: modele de variables d'environnement.
 - `DEMO_JURY.md`: scenario de demonstration devant jury.
-- `README.md`: lancement local.
+- `README.md`: documentation complete du projet, des technologies et des parties securite.
 
 ## Etapes pour obtenir le lien public
 
@@ -70,10 +70,11 @@ APP_HOST=0.0.0.0
 APP_SESSION_SECRET=une-longue-valeur-aleatoire
 APP_ADMIN_USERNAME=admin
 APP_ADMIN_PASSWORD=un-mot-de-passe-fort
+APP_COOKIE_SECURE=true
 MQTT_HOST=na7a271a.ala.eu-central-1.emqxsl.com
 MQTT_PORT=8883
 MQTT_USERNAME=dht22
-MQTT_PASSWORD=dht22test
+MQTT_PASSWORD=mot-de-passe-emqx
 MQTT_TELEMETRY_TOPIC=smart-home/dht22/telemetry
 MQTT_STATUS_TOPIC=smart-home/dht22/status
 MQTT_CONTROL_TOPIC=smart-home/dht22/control
