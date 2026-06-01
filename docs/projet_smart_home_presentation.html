@@ -325,7 +325,7 @@
         </div>
         <div class="card">
           <h3>Protection applicative</h3>
-          <p>Sessions signees HttpOnly, protection CSRF, limitation des tentatives et endpoint de sante sans secrets.</p>
+          <p>Sessions signees HttpOnly, protection CSRF, limitation des tentatives et supervision de l'etat applicatif.</p>
         </div>
       </div>
 
@@ -340,7 +340,7 @@
         <tbody>
           <tr>
             <td><code>/api/health</code></td>
-            <td><code>mqtt.connected = true</code>, broker et port visibles, aucun secret expose.</td>
+            <td><code>mqtt.connected = true</code>, verification de la connexion au broker MQTT.</td>
           </tr>
           <tr>
             <td>Wokwi Serial Monitor</td>

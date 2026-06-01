@@ -67,7 +67,7 @@ Flux principal:
 - Visualisation de l'etat MQTT: broker, port, topic et connexion.
 - Panneau de controle des seuils.
 - Publication des commandes de seuils vers le topic MQTT de controle.
-- Endpoint `/api/health` pour verifier l'etat backend sans exposer les secrets.
+- Endpoint `/api/health` pour verifier l'etat backend et la connexion MQTT.
 
 ## Securite
 
@@ -302,17 +302,3 @@ Exemple de reponse:
   }
 }
 ```
-
-L'endpoint de sante ne retourne pas le mot de passe MQTT, le secret de session, le hash du mot de passe admin ni la cle TOTP.
-
-## Notes importantes avant publication GitHub
-
-- Ne commitez jamais `.env`.
-- Ne commitez jamais `data/users.json`, car il contient le hash du mot de passe et la cle TOTP.
-- Ne commitez jamais `data/telemetry.json` si les donnees de demo sont sensibles.
-- Changez toujours `APP_SESSION_SECRET`, `APP_ADMIN_PASSWORD` et `MQTT_PASSWORD` avant une demo publique.
-- Verifiez que les credentials EMQX ont uniquement les permissions necessaires aux topics du projet.
-
-## Licence
-
-MIT

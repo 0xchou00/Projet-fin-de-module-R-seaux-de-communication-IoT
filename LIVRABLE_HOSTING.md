@@ -45,7 +45,7 @@ git branch -M main
 git push -u origin main
 ```
 
-Important: `.env` et `data/` sont ignores par Git. Ne publie pas tes secrets dans GitHub.
+Le depot contient uniquement les fichiers necessaires au livrable et au deploiement.
 
 ### 2. Creer le service Render
 
@@ -130,4 +130,4 @@ Telemetry published successfully
 - L'application hebergee recoit les memes messages en temps reel.
 - Le dashboard est protege par mot de passe + MFA.
 - Le navigateur ne contient pas les identifiants MQTT.
-- `/api/health` confirme l'etat backend + MQTT sans exposer de secrets.
+- `/api/health` confirme l'etat backend + MQTT.
