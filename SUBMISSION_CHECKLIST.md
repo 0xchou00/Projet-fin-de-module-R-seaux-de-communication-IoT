@@ -21,6 +21,7 @@ Important: le lien Wokwi doit etre cree depuis le compte Wokwi du groupe, puis r
 ## 3. Presentation du projet
 
 - Presentation PDF finale: `docs/Projet_Smart_Home_DHT22_Presentation.pdf`.
+- Presentation PowerPoint modifiable: `docs/Maison_Intelligente_ESP32_MQTT_TLS.pptx`.
 - Version HTML modifiable: `docs/projet_smart_home_presentation.html`.
 - Schema d'architecture: `docs/architecture.svg`.
 

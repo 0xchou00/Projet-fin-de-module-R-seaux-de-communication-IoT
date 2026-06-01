@@ -129,6 +129,7 @@ Le backend applique des en-tetes de securite:
 |-- docs/
 |   |-- architecture.svg      # Schema d'architecture
 |   |-- esp32_dht22_wiring.svg
+|   |-- Maison_Intelligente_ESP32_MQTT_TLS.pptx
 |   |-- projet_smart_home_presentation.html
 |   |-- Projet_Smart_Home_DHT22_Presentation.pdf
 |   `-- Projet_Smart_Home_DHT22_Architecture.pdf
@@ -277,6 +278,7 @@ Le dossier `docs/` contient les supports de presentation:
 
 - `Projet_Smart_Home_DHT22_Architecture.pdf`: presentation PDF du projet.
 - `Projet_Smart_Home_DHT22_Presentation.pdf`: version PDF finale a remettre.
+- `Maison_Intelligente_ESP32_MQTT_TLS.pptx`: presentation PowerPoint modifiable.
 - `projet_smart_home_presentation.html`: version HTML imprimable/modifiable.
 - `architecture.svg`: schema d'architecture du systeme.
 
